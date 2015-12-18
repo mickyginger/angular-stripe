@@ -1,0 +1,19 @@
+{
+  "name": "angular-stripe",
+  "version": "1.0.0",
+  "description": "A simple stripe implementation",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "cors": "^2.7.1",
+    "express": "^4.13.3",
+    "morgan": "^1.6.1",
+    "stripe": "^4.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mike Hayden <mickyginger@gmail.com> (https://github.com/mickyginger)",
+  "license": "ISC"
+}
