@@ -20,7 +20,7 @@ app.post('/payment', function(req, res) {
   var token = req.body.token;
 
   var charge = stripe.charges.create({
-    amount: req.body.amount,
+    amount: parseInt(parseFloat(req.body.amount * 100), 10),
     currency: req.body.currency,
     source: token,
     description: 'TEST'

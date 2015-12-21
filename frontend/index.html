@@ -12,31 +12,77 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/app.css">
 </head>
 <body>
-  <div class="container-fluid">
+  <div class="container" ng-controller="PaymentController as payment">
     <h1>Stripe Payment Form</h1>
-    <form class="form" ng-controller="PaymentController as payment" ng-hide="payment.paymentSuccessful" ng-submit="payment.pay()">
-      <div class="form-group has-success has-feedback">
-        <label class="control-label">Card Number</label>
-        <input type="text" class="form-control" ng-model="payment.card.number" placeholder="4242 4242 4242 4242">
-        <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+    {{payment.Form.$submitted}}
+    <form class="form" name="payment.Form" ng-hide="payment.paymentSuccessful" ng-submit="payment.pay()">
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="form-group" ng-class="{ 'has-feedback': payment.Form.payee.$dirty, 'has-success': (payment.Form.payee.$valid && payment.Form.payee.$dirty), 'has-error': (payment.Form.payee.$invalid && payment.Form.payee.$dirty) }">
+            <label class="control-label">Card Holder's Name</label>
+            <input type="text" name="payee" class="form-control" ng-model="payment.payee" placeholder="Mr A Smith" required ng-minlength="2">
+            <span ng-if="(payment.Form.payee.$valid && payment.Form.payee.$dirty)" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <span ng-if="(payment.Form.payee.$invalid && payment.Form.payee.$dirty)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group" ng-class="{ 'has-feedback': payment.Form.amount.$dirty, 'has-success': (payment.Form.amount.$valid && payment.Form.amount.$dirty), 'has-error': (payment.Form.amount.$invalid && payment.Form.amount.$dirty) }">
+            <label class="control-label">Total Amount to Pay</label>
+            <div class="input-group">
+              <div class="input-group-addon">&pound;</div>
+              <input type="text" name="amount" class="form-control" ng-model="payment.amount" placeholder="25.00" required ng-pattern="/^[0-9]+(\.[0-9]{2})?$/">
+            </div>
+            <span ng-if="(payment.Form.amount.$valid && payment.Form.amount.$dirty)" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <span ng-if="(payment.Form.amount.$invalid && payment.Form.amount.$dirty)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+          </div>
+        </div>
       </div>
-      <div class="form-group has-success has-feedback">
-        <label class="control-label">CVC</label>
-        <input type="text" class="form-control" ng-model="payment.card.cvc" placeholder="123">
-        <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="form-group" ng-class="{ 'has-feedback': payment.Form['card-number'].$dirty, 'has-success': (payment.Form['card-number'].$valid && payment.Form['card-number'].$dirty), 'has-error': (payment.Form['card-number'].$invalid && payment.Form['card-number'].$dirty) }">
+            <label class="control-label">Card Number</label>
+            <input type="text" name="card-number" class="form-control" ng-model="payment.card.number" placeholder="4242424242424242" required ng-pattern="/^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})$/">
+            <span ng-if="(payment.Form['card-number'].$valid && payment.Form['card-number'].$dirty)" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <span ng-if="(payment.Form['card-number'].$invalid && payment.Form['card-number'].$dirty)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group" ng-class="{ 'has-feedback': payment.Form.cvc.$dirty, 'has-success': (payment.Form.cvc.$valid && payment.Form.cvc.$dirty), 'has-error': (payment.Form.cvc.$invalid && payment.Form.cvc.$dirty) }">
+            <label class="control-label">CVC</label>
+            <input type="text" name="cvc" class="form-control" ng-model="payment.card.cvc" placeholder="123" required ng-maxlength="3" ng-pattern="/[0-9]{3}/">
+            <span ng-if="(payment.Form.cvc.$valid && payment.Form.cvc.$dirty)" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <span ng-if="(payment.Form.cvc.$invalid && payment.Form.cvc.$dirty)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+          </div>
+        </div>
       </div>
-      <div class="form-group has-success has-feedback">
-        <label class="control-label">Exipry (MM/YYYY)</label>
-        <input type="text" class="form-control" ng-model="payment.card.expMonth" placeholder="01">
-        <input type="text" class="form-control" ng-model="payment.card.expYear" placeholder="2015">
-        <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group" ng-class="{ 'has-feedback': payment.Form.exp_month.$dirty, 'has-success': (payment.Form.exp_month.$valid && payment.Form.exp_month.$dirty), 'has-error': (payment.Form.exp_month.$invalid && payment.Form.exp_month.$dirty) }">
+            <label class="control-label">Expiry Month</label>
+            <input type="text" name="exp_month" class="form-control" ng-model="payment.card.exp_month" placeholder="06" required ng-pattern="/(0[1-9]|1[0-2])/">
+            <span ng-if="(payment.Form.exp_month.$valid && payment.Form.exp_month.$dirty)" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <span ng-if="(payment.Form.exp_month.$invalid && payment.Form.exp_month.$dirty)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group" ng-class="{ 'has-feedback': payment.Form.exp_year.$dirty, 'has-success': (payment.Form.exp_year.$valid && payment.Form.exp_year.$dirty), 'has-error': (payment.Form.exp_year.$invalid && payment.Form.exp_year.$dirty) }">
+            <label class="control-label">Exipry Year</label>
+            <input type="text" name="exp_year" class="form-control" ng-model="payment.card.exp_year" placeholder="2016" required ng-pattern="/20(1[6-9]|2[0-9])/">
+            <span ng-if="(payment.Form.exp_year.$valid && payment.Form.exp_year.$dirty)" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <span ng-if="(payment.Form.exp_year.$invalid && payment.Form.exp_year.$dirty)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+          </div>
+        </div>
       </div>
-      <button class="btn btn-primary">Make Payment</button>
+      <button class="btn btn-primary" ng-disabled="(payment.Form.$invalid||payment.Form.$submitted)">Make Payment</button>
     </form>
     <div ng-show="payment.paymentSuccessful">
-      PAYMENT SUCCESSFUL
+      <h2>Thank you!</h2>
+      <p>Your payment for &pound;{{payment.amount}} was successful</p>
+      <p>You will recieve a confirmation email shortly</p>
+      <button class="btn btn-primary" ng-click="payment.reset()">Make Another Payment</button>
     </div>
   </div>
 </body>
