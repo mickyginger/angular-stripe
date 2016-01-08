@@ -16,7 +16,6 @@ function PaymentController($http, API_URL) {
     Stripe.card.createToken(self.card, function(status, response) {
       if(status === 200) {
         var data = {
-          card: self.card,
           token: response.id,
           amount: self.amount,
           currency: self.currency,

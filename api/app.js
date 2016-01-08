@@ -2,7 +2,7 @@ var express = require('express');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-var stripe = require('stripe')("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
+var stripe = require('stripe')(process.env.StripeTestSecretKey);
 
 var PORT = process.env.PORT || 3000;
 
