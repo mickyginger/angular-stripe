@@ -18,8 +18,7 @@ function PaymentController($http, API_URL) {
         var data = {
           token: response.id,
           amount: self.amount,
-          currency: self.currency,
-          payee: self.payee
+          currency: self.currency
         };
 
         $http
